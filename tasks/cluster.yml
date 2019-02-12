@@ -1,0 +1,43 @@
+---
+- name: Gather cluster information
+  hcloud_server:
+    state: list
+  register: servers_list
+
+- name: "Changing cluster state to {{ state }}"
+  hcloud_server:
+    name: "{{ item.name }}"
+    image: "{{ item.image | default(lookup('vars', 'default_image')) }}"
+    server_type: "{{ item.type | default(lookup('vars', 'default_type')) }}"
+    ssh_keys: "{{ ssh_keys }}"
+    state: "{{ state }}"
+  loop: "{{ nodes }}"
+  register: servers_deployed
+
+- name: Gather cluster information
+  hcloud_server:
+    state: list
+  register: servers_list_new
+
+- set_fact:
+    servers_list: "{{ servers_list_new }}"
+  when: servers_list.servers.0 is not defined
+
+- name: Refresh inventory
+  meta: refresh_inventory
+
+- name: Add label for server profile
+  command: "../scripts/hcloud server add-label {{ item.1 }} profile={{ item.0.profile }}"
+  loop: "{{ nodes|subelements('name') }}"
+  when: servers_deployed.changed == True and state == "present"
+  ignore_errors: true
+
+- name: Wait for hosts SSH to be available
+  wait_for:
+    host: "{{ item.1.public_ipv4 }}"
+    port: 22
+    state: started
+    delay: 1
+    timeout: 120
+  loop: "{{ lookup('subelements', servers_deployed.results, 'servers', {'skip_missing': True})}}"
+  when: servers_deployed.changed == True and state == "present"

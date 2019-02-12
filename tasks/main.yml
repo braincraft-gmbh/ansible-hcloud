@@ -1,0 +1,14 @@
+---
+- import_tasks: cluster.yml
+  delegate_to: localhost
+
+- import_tasks: volumes.yml
+  delegate_to: localhost
+  when: servers_deployed.changed == True
+
+- import_tasks: keys.yml
+  delegate_to: localhost
+  when: servers_deployed.changed == True
+
+- include_tasks: prepare.yml
+  when: hostvars.localhost.servers_deployed.changed == True and state == "present"

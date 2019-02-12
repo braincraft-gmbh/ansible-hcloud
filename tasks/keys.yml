@@ -1,0 +1,20 @@
+---
+- name: Setup SSH keys
+  hcloud_ssh_key:
+    name: "{{ item }}"
+    public_key: "{{ lookup('file', '../keys/{{ item }}.keys') }}"
+    state: present
+  loop: "{{ ssh_keys }}"
+  run_once: true
+
+- name: Remove old keys from known_hosts
+  known_hosts:
+    name: "{{ item.public_ipv4 }}"
+    state: absent
+  loop: "{{ servers_list.servers }}"
+
+- name: Add new keys to known_hosts
+  known_hosts:
+    name: "{{ item.1.public_ipv4 }}"
+    key: "{{ lookup('pipe', 'ssh-keyscan {{ item.1.public_ipv4 }}') }}"
+  loop: "{{ lookup('subelements', servers_deployed.results, 'servers', {'skip_missing': True})}}"
