@@ -72,7 +72,8 @@ Dependencies
 A [dynamic inventory script
 `hcloud.py`](https://github.com/hg8496/ansible-hcloud-inventory/) is used to
 gather the hosts available under the project with the respective API token and
-should be present in the playbook inventory path.
+should be present in the playbook inventory path. This script is also included
+under `tests/inventory`.
 
 The [`hcloud-ansible` modules](https://github.com/thetechnick/hcloud-ansible)
 are also used and have been added to the role under `library/` for convenience.

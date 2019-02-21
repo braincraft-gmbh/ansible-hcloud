@@ -3,3 +3,17 @@
   remote_user: root
   roles:
     - bc.hcloud
+  vars:
+    nodes:
+      - name:
+          - serverA
+          - serverB
+        type: cx11
+        profile: web
+      - name:
+          - serverC
+        type: cx11-ceph
+        profile: storage
+        volumes:
+          - mount: srv
+            size: 20
