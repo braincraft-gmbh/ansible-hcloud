@@ -77,6 +77,11 @@ should be present in the playbook inventory path.
 The [`hcloud_server` module](https://github.com/thetechnick/hcloud-ansible)
 needs to be present on the `library` path.
 
+Due to limitations on the `hcloud_server` module ([no volumes
+support](https://github.com/thetechnick/hcloud-ansible/issues/26)), this role
+currently uses the [`hcloud-cli`](https://github.com/hetznercloud/cli) (included
+in the role).
+
 
 Example Playbook
 ----------------

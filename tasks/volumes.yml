@@ -1,6 +1,6 @@
 ---
 - name: Gather list of volumes and associated servers
-  command: files/getvolumes-json.sh
+  script: getvolumes-json.sh
   register: hcloud_storage
 
 - name: Sort out list of volumes
@@ -12,7 +12,7 @@
 
 # Currently creates/attaches volumes only to the first server of each
 # profile (when volumes is defined)
-- command: "../scripts/hcloud volume create --name {{ item.0.name[0] }}_{{ item.1.mount }} --size {{ item.1.size }} --server {{ item.0.name[0] }}"
+- script: "hcloud volume create --name {{ item.0.name[0] }}_{{ item.1.mount }} --size {{ item.1.size }} --server {{ item.0.name[0] }}"
   loop: "{{ query('subelements', nodes, 'volumes', {'skip_missing': True}) }}"
   when: >
     item.1 is defined and

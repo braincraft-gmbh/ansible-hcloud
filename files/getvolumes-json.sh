@@ -2,7 +2,7 @@
 
 FIELDS="id,linux_device,location,name,protection,server,size"
 
-../scripts/hcloud volume list -o noheader -o columns=$FIELDS | awk '
+hcloud volume list -o noheader -o columns=$FIELDS | awk '
 BEGIN {
     delete arr[0]
 }
