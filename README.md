@@ -74,13 +74,13 @@ A [dynamic inventory script
 gather the hosts available under the project with the respective API token and
 should be present in the playbook inventory path.
 
-The [`hcloud_server` module](https://github.com/thetechnick/hcloud-ansible)
-needs to be present on the `library` path.
+The [`hcloud-ansible` modules](https://github.com/thetechnick/hcloud-ansible)
+are also used and have been added to the role under `library/` for convenience.
 
 Due to limitations on the `hcloud_server` module ([no volumes
 support](https://github.com/thetechnick/hcloud-ansible/issues/26)), this role
 currently uses the [`hcloud-cli`](https://github.com/hetznercloud/cli) (included
-in the role).
+in the role under `files/` for convenience).
 
 
 Example Playbook
