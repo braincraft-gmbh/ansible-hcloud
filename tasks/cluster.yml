@@ -35,7 +35,7 @@
   meta: refresh_inventory
 
 - name: Add label for server profile
-  command: "../scripts/hcloud server add-label {{ item.1 }} profile={{ item.0.profile }}"
+  command: "hcloud server add-label {{ item.1 }} profile={{ item.0.profile }}"
   loop: "{{ nodes|subelements('name') }}"
   when: servers_deployed.changed == True and state == "present"
   ignore_errors: true
