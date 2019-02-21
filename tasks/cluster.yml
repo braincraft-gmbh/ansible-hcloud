@@ -4,13 +4,20 @@
     state: list
   register: servers_list
 
-- name: "Changing cluster state to {{ state }}"
+- name: Setup SSH keys for cluster
+  hcloud_ssh_key:
+    name: "{{ item | regex_search('\\S+$') }}"
+    public_key: "{{ item }}"
+    state: present
+  loop: "{{ hcloud_ssh_keys }}"
+
+- name: "Changing cluster state to {{ cluster_state }}"
   hcloud_server:
     name: "{{ item.name }}"
     image: "{{ item.image | default(lookup('vars', 'default_image')) }}"
     server_type: "{{ item.type | default(lookup('vars', 'default_type')) }}"
-    ssh_keys: "{{ ssh_keys }}"
-    state: "{{ state }}"
+    ssh_keys: "{{ hcloud_ssh_keys | map('regex_search', '\\S+$') | list }}"
+    state: "{{ cluster_state }}"
   loop: "{{ nodes }}"
   register: servers_deployed
 
@@ -19,7 +26,8 @@
     state: list
   register: servers_list_new
 
-- set_fact:
+- name: Replace servers_list with new inventory
+  set_fact:
     servers_list: "{{ servers_list_new }}"
   when: servers_list.servers.0 is not defined
 

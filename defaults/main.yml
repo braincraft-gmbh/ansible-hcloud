@@ -1,2 +1,8 @@
 ---
-# defaults file for bc.hcloud
+nodes: []
+cluster_state: present
+default_image: ubuntu-18.04
+default_location: nbg11
+default_type: cx11
+hcloud_ssh_keys:
+  - "{{ lookup('file', '~/.ssh/id_rsa.pub' )}}"

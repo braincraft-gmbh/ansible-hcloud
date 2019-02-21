@@ -8,19 +8,22 @@ in a Hetzner Cloud cluster (project).
 Requirements
 ------------
 
-Access to the API is given via a token, which needs to be defined on the Hetzner Console.
-The token is specific to a project and should be made available to ansible on the control machine
-via the `HCLOUD_API` environment variable.
+Access to the API is given via a token, which needs to be defined on the Hetzner
+Console. The token is specific to a project and should be made available to
+ansible on the control machine via the `HCLOUD_API` environment variable.
 
 
 Role Variables
 --------------
 
-The cluster configuration is given by the variable `nodes`, which should contain an array of
-dictionary items. Each list element contains one or more hosts to be deployed. This can be
-used to aggregate nodes according to their typology. Each node item will be sent with one
-single `hcloud_server` task, allowing the creation or destruction of multiple servers at once
-(read the [hcloud_server module documentation](https://github.com/thetechnick/hcloud-ansible/blob/master/docs/hcloud_server.md) for more information).
+The cluster configuration is given by the variable `nodes`, which should contain
+an array of dictionary items. Each list element contains one or more hosts to be
+deployed. This can be used to aggregate nodes according to their typology. Each
+node item will be sent with one single `hcloud_server` task, allowing the
+creation or destruction of multiple servers at once (read the [hcloud_server
+module
+documentation](https://github.com/thetechnick/hcloud-ansible/blob/master/docs/hcloud_server.md)
+for more information).
 
 Here is a definition of `nodes`:
 
@@ -36,20 +39,40 @@ nodes:
     type: cx11-ceph
     profile: storage
     volumes:
-    - mount: srv
-      size: 20
+      - mount: srv
+        size: 20
 ```
+
+*Note: currently only one volume per host is supported, due to an issue with the
+*`getvolumes-json.sh` script*
 
 The variable `cluster_state` further controls whether the cluster hosts should be
 `present` or `absent`.
+
+Furthermore, you need to set at least one key from the control user in the
+`hcloud_ssh_keys` array, in order for the role to successfully access and
+prepare the new hosts. This defaults to `~/.ssh/id_rsa.pub`.
+
+Following are the vars defaults for this role:
+
+```
+nodes: []
+cluster_state: present
+default_image: ubuntu-18.04
+default_location: nbg11
+default_type: cx11
+hcloud_ssh_keys:
+  - "{{ lookup('file', '~/.ssh/id_rsa.pub' )}}"
+```
 
 
 Dependencies
 ------------
 
-A [dynamic inventory script `hcloud.py`](https://github.com/hg8496/ansible-hcloud-inventory/)
-is used to gather the hosts available under the project with the respective API token
-and should be present in the playbook inventory path.
+A [dynamic inventory script
+`hcloud.py`](https://github.com/hg8496/ansible-hcloud-inventory/) is used to
+gather the hosts available under the project with the respective API token and
+should be present in the playbook inventory path.
 
 The [`hcloud_server` module](https://github.com/thetechnick/hcloud-ansible)
 needs to be present on the `library` path.
@@ -59,7 +82,7 @@ Example Playbook
 ----------------
 
 ```
-    - hosts: hcloud_cluster
+    - hosts: all
       roles:
          - { role: bc.hcloud, state: present }
 ```
@@ -68,11 +91,11 @@ Example Playbook
 License
 -------
 
-GNU GPL v3
+GNU GPLv3
 
 
 Author Information
 ------------------
 
-* Gualter Barbas Baptista <gualter@ecobytes.net>
-* Michael Langermann <mila@braincraft.de>
+* Gualter Barbas Baptista @gandhiano gualter [at] ecobytes.net
+* Michael Langfermann @versable versable [at] gmail.com
