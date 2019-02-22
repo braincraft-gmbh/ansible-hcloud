@@ -1,7 +1,7 @@
 bc.hcloud
 =========
 
-This role can be used to create, destroy, start or stop the servers
+This role can be used to create, prepare and manage hosts
 in a Hetzner Cloud cluster (project).
 
 
@@ -69,17 +69,12 @@ hcloud_ssh_keys:
 Dependencies
 ------------
 
-A [dynamic inventory script
-`hcloud.py`](https://github.com/hg8496/ansible-hcloud-inventory/) is used to
-gather the hosts available under the project with the respective API token and
-should be present in the playbook inventory path. This script is also included
-under `tests/inventory`.
-
 The [`hcloud-ansible` modules](https://github.com/thetechnick/hcloud-ansible)
-are also used and have been added to the role under `library/` for convenience.
+are used and have been added to the role under `library/` for convenience.
 
-Due to limitations on the `hcloud_server` module ([no volumes
-support](https://github.com/thetechnick/hcloud-ansible/issues/26)), this role
+Due to limitations on the `hcloud_server` module (no support for
+[volumes](https://github.com/thetechnick/hcloud-ansible/issues/26) and
+[labels](https://github.com/thetechnick/hcloud-ansible/issues/25)), this role
 currently uses the [`hcloud-cli`](https://github.com/hetznercloud/cli) (included
 in the role under `files/` for convenience).
 
