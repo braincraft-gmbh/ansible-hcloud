@@ -9,4 +9,4 @@
   delegate_to: localhost
 
 - include_tasks: prepare.yml
-  when: hostvars.localhost.servers_deployed.changed == True and state == "present"
+  when: hostvars.localhost.servers_deployed.changed and cluster_state == "present"
