@@ -18,6 +18,12 @@
     server_type: "{{ item.type | default(lookup('vars', 'default_type')) }}"
     ssh_keys: "{{ hcloud_ssh_keys | map('regex_search', '\\S+$') | list }}"
     state: "{{ cluster_state }}"
+    user_data: |
+      #cloud-config
+      packages:
+        - python-simplejson
+      runcmd:
+        - [touch, /root/.hushlogin]
   loop: "{{ nodes }}"
   register: servers_deployed
 
@@ -30,9 +36,6 @@
   set_fact:
     servers_list: "{{ servers_list_new }}"
   when: servers_list.servers.0 is not defined
-
-- name: Refresh inventory
-  meta: refresh_inventory
 
 - name: Add label for server profile
   command: "hcloud server add-label {{ item.1 }} profile={{ item.0.profile }}"
