@@ -1,8 +1,8 @@
 bc.hcloud
 =========
 
-This role can be used to create, prepare and manage hosts
-in a Hetzner Cloud cluster (project).
+This role can be used to provision and manage hosts, volumes and SSH keys
+in the Hetzner Cloud.
 
 
 Requirements
@@ -44,7 +44,7 @@ nodes:
 ```
 
 *Note: currently only one volume per host is supported, due to an issue with the
-*`getvolumes-json.sh` script*
+`getvolumes-json.sh` script*
 
 The variable `cluster_state` further controls whether the cluster hosts should be
 `present` or `absent`.
