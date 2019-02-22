@@ -42,13 +42,3 @@
   loop: "{{ nodes|subelements('name') }}"
   when: servers_deployed.changed and cluster_state == "present"
   ignore_errors: true
-
-- name: Wait for hosts SSH to be available
-  wait_for:
-    host: "{{ item.1.public_ipv4 }}"
-    port: 22
-    state: started
-    delay: 1
-    timeout: 120
-  loop: "{{ lookup('subelements', servers_deployed.results, 'servers', {'skip_missing': True})}}"
-  when: servers_deployed.changed and cluster_state == "present"

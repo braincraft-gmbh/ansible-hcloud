@@ -5,5 +5,15 @@
 - import_tasks: volumes.yml
   delegate_to: localhost
 
+- name: Wait for hosts SSH to become available
+  wait_for:
+    host: "{{ item.1.public_ipv4 }}"
+    port: 22
+    state: started
+    delay: 1
+    timeout: 120
+  loop: "{{ lookup('subelements', servers_deployed.results, 'servers', {'skip_missing': True})}}"
+  when: servers_deployed.changed and cluster_state == "present"
+
 - import_tasks: keys.yml
   delegate_to: localhost
