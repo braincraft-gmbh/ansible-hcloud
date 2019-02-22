@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: users
+  role_name: hcloud
   author: Gualter Barbas Baptista (gandhiano) and Michael Langfermann (versable)
   description: "Provision and manage hosts, volumes and SSH keys in the Hetzner Cloud"
   company: "Braincraft GmbH"
